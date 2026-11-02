@@ -1,0 +1,5 @@
+# Exact versions PortShelf was tested with. See THIRD_PARTY_NOTICES.txt for their licences.
+psutil==7.2.2
+pystray==0.19.5
+Pillow==13.0.0
+six==1.17.0
