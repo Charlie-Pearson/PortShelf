@@ -1195,10 +1195,20 @@ class App:
             Item("Quit", post("quit")),
         )
         self.tray = None
+        self.tray_ready = threading.Event()
+
+        def setup(icon):
+            icon.visible = True
+            self.tray_ready.set()
+
         self.tray = pystray.Icon(APP, tray_image(0), APP, menu)
-        self.tray.run_detached()
+        self.tray.run_detached(setup)
 
     def update_tray(self):
+        # pystray shows the icon on its own thread and silently drops icon changes made
+        # before that finishes, so wait until it's visible; the next scan then applies the count.
+        if not self.tray_ready.is_set():
+            return
         n = sum(1 for g in self.live if g["dev"])
         if n != self.tray_count:
             self.tray_count = n
